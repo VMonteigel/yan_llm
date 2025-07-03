@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создай своего ассистента</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+	    <div class="leftSide">
+            <!-- Header -->
+            <div class="header">
+                <p>Ассистент</p>
+            </div>
+			<!-- LLM -->
+			<div class="llm-column">
+			   <form id="newas" autocomplete="off">
+				<div><img src="{{ img }}" alt="Фото ассистента" class="llm-photo"></div>
+				      <div>
+				        <p>Данные ассистента:</p>
+                 <label><input type="radio" id="men" name="gender" value="Мужчина"> Мужчина</label>
+                 <label><input type="radio" id="woman" name="gender" value="Женщина"> Женщина</label>
+              </div>
+              <div class="agecontainer">
+				         <p>Возраст:</p>
+					     <input type="range" min="14" max="88" value="{{ age }}" class="slider" id="ageRange" name="age">
+					     <span id="ageDemo"></span>
+				      </div>
+              <div class="tcontainer">
+				         <p>Креативность:</p>
+					     <input type="range" min="0" max="1" step="0.1" value="{{ tllm }}" class="slider" id="tRange" name="tllm">
+					     <span id="tDemo"></span>
+				      </div>
+					  <div><p>Промт текущего ассистента</p></div>
+				    <div class="promt-group">
+						    <textarea class="promt-textarea" id="promt" name="promt">{{ promt }}</textarea>
+            </div>
+            <div>
+				      <p>Строгость проверки промта:</p>
+						  <label><input type="radio" name="valid" id="light" value="light"> По лайту</label>
+						  <label><input type="radio" name="valid" id="hard" value="hard"> Попридирчивее</label>
+            </div>
+				</div>
+                <div class="chat_input">
+				   <p> </p>
+                   <button type="submit" class="button-right" id="submit-btn">Создать</button>
+                </div>
+			  </form>
+        </div>
+        <div class="rightSide">
+            <div class="header">
+			   <p>Текущий чат с ассистентом</p>
+               <button id="clear-but" class="button-right">Очистить чат</button>
+            </div>
+            <!-- CHAT-BOX -->
+            <div id="chat-box" class="chatbox">
+                {% for entry in chat_history %}
+                  <div class="message user"><p>Вы:<br/> {{ entry.user_t }}</p></div>
+                  <div class="message llm"><p>Ассистент:<br/> {{ entry.llm_t }}</p></div>
+                {% endfor %}
+            </div>
+            <!-- CHAT INPUT -->
+            <form id="chat-form" autocomplete="off">
+              <div class="chat_input">
+
+                 <input type="text" id="user-input" placeholder="Введите вопрос  " required>
+				 <button class="button-right" type="submit">Отправить</button>
+
+              </div>
+            </form>
+        </div>
+    </div>
+   <script src="{{ url_for('static', filename='script.js') }}"></script>
+   <script>
+     var men = document.getElementById("men");
+     if (men.value === '{{ gender }}') men.checked = true;
+     var woman = document.getElementById("woman");
+     if (woman.value === '{{ gender }}') woman.checked = true;
+
+     var men = document.getElementById("light");
+     if (light.value === '{{ valid }}') men.checked = true;
+     var woman = document.getElementById("hard");
+     if (hard.value === '{{ valid }}') woman.checked = true;
+
+     var age_slider = document.getElementById("ageRange");
+     var age_output = document.getElementById("ageDemo");
+     age_output.innerHTML = age_slider.value;
+
+     age_slider.oninput = function() {
+         age_output.innerHTML = this.value;
+     }
+
+	 var tllm_slider = document.getElementById("tRange");
+     var tllm_output = document.getElementById("tDemo");
+     tllm_output.innerHTML = tllm_slider.value;
+
+     tllm_slider.oninput = function() {
+     tllm_output.innerHTML = this.value;
+     }
+   </script>
+</body>
+</html>
