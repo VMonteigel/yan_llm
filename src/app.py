@@ -11,7 +11,7 @@ app.secret_key = 'your_secret_service_here'
 
 @app.route("/")
 def home():
-    session.clear()
+    # session.clear()
     session.permanent = True
     if 'user_id' not in session:
         session['user_id'] = f"user_{uuid.uuid4().hex[:8]}"
@@ -64,6 +64,6 @@ def clear():
 
 if __name__ == "__main__":
     with app.app_context():
-        db.drop_all()
+        # db.drop_all()
         db.create_all()
         app.run(debug=True)
