@@ -15,7 +15,7 @@ def home():
     session.permanent = True
     if 'user_id' not in session:
         session['user_id'] = f"user_{uuid.uuid4().hex[:8]}"
-        AsSetting.add_user(AsSetting, session['user_id'])
+    AsSetting.add_user(AsSetting, session['user_id'])
     session['cr_status'] = False
     chat_history = AsHistory.query.filter_by(user_id=session['user_id']).order_by(AsHistory.timestamp.asc()).all()
     templ = AsSetting.templ(AsSetting, session['user_id'])
@@ -66,4 +66,4 @@ if __name__ == "__main__":
     with app.app_context():
         # db.drop_all()
         db.create_all()
-        app.run(debug=True)
+        app.run(debug=False)
