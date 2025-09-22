@@ -42,7 +42,8 @@ class AsSetting(db.Model):
 
     @classmethod
     def add_form(cls, user_id, json_data):
-        entry = cls.query.filter(cls.user_id == user_id).first()
+        # entry = cls.query.filter(cls.user_id == user_id).first()  # единственная
+        entry = cls(user_id=user_id)
         if 'gender' in json_data:
             entry.gender = json_data['gender']
         if 'age' in json_data:
@@ -55,12 +56,20 @@ class AsSetting(db.Model):
             entry.valid = json_data['valid']
         if 'img' in json_data:
             entry.img = json_data['img']
+        db.session.add(entry)  # в случае новой
         db.session.commit()
 
     @classmethod
-    def templ(cls, user_id):
-        entry = cls.query.filter(cls.user_id == user_id).first()
+    def templ(cls, call_id, mode=0):
+        if mode:
+            entry = cls.query.filter(cls.id == call_id).first()
+        else:
+            # entry = cls.query.filter(cls.user_id == call_id).first()
+            entry = cls.query.filter(cls.user_id == call_id).order_by(cls.id.desc()).first()
+        if not entry:
+            return None
         resp = {
+            'id': entry.id,
             'gender': entry.gender,
             'age': entry.age,
             'tllm': entry.tllm,

@@ -120,7 +120,6 @@ def reply(user_id, user_message):
         f"Твой промпт: {templ['promt']} " \
         f"Веди себя естественно в рамках твоего пола, возраста и роли, не говори, что ты искусственный интелект. " \
         f"Формат вывода обычный текст, без таблиц и Markdown."
-    print(promt)
     head = make_gpt(promt, history, templ['tllm'], max=888)
     llm_reply = yan_gpt(head)
     AsHistory.add_message(user_id, user_message, llm_reply)

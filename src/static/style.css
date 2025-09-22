@@ -28,6 +28,17 @@ body {
   display: flex;
 }
 
+/* @media (max-width: 849px) {
+  .leftSide {
+    display: none;
+  }
+}
+@media (min-width: 850px) {
+  .button-tab {
+    display: block;
+  }
+} */
+
 .container .leftSide {
   position: relative;
   flex: 30%;
@@ -71,13 +82,14 @@ body {
   object-fit: cover;
 }
 
-.button-right {
+.button-right, .button_tab {
   display: flex;
   padding: 8px 18px;
   margin-left: 22px;
   font-family: 'Arial', sans-serif;
   font-size: 18px;
   font-weight: 500;
+  white-space: nowrap;
   color: white;
   text-align: center;
   background-color: #009688;
@@ -88,12 +100,16 @@ body {
   justify-content: flex-end
 }
 
-.button-right:hover {
+.button_tab {
+  display: none
+}
+
+.button-right:hover, .button_tab:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.button-right:active {
+.button-right:active, .button_tab:active{
   transform: translateY(0);
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -127,7 +143,7 @@ body {
 }
 
 .promt-group {
-  height: 400px;
+  height: 320px;
   padding: 20px;
   padding-top: 5px;
 }

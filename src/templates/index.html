@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,72 +8,123 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-	    <div class="leftSide">
-            <!-- Header -->
-            <div class="header">
-                <p>Ассистент</p>
-            </div>
-			<!-- LLM -->
+  <div class="container">
+	  <div class="leftSide" id="left_block">
+      <div class="header">
+         <p>Настройки ассистента</p>
+         <button id="tabl" class="button_tab" title="Переключиться на чат.">Чат &gt;</button>
+      </div>
 			<div class="llm-column">
-			   <form id="newas" autocomplete="off">
-				<div><img src="{{ img }}" alt="Фото ассистента" class="llm-photo"></div>
-				      <div>
-				        <p>Данные ассистента:</p>
-                 <label><input type="radio" id="men" name="gender" value="Мужчина"> Мужчина</label>
-                 <label><input type="radio" id="woman" name="gender" value="Женщина"> Женщина</label>
-              </div>
-              <div class="agecontainer">
-				         <p>Возраст:</p>
-					     <input type="range" min="14" max="88" value="{{ age }}" class="slider" id="ageRange" name="age">
-					     <span id="ageDemo"></span>
-				      </div>
-              <div class="tcontainer">
-				         <p>Креативность:</p>
-					     <input type="range" min="0" max="1" step="0.1" value="{{ tllm }}" class="slider" id="tRange" name="tllm">
-					     <span id="tDemo"></span>
-				      </div>
-					  <div><p>Промт текущего ассистента</p></div>
-				    <div class="promt-group">
-						    <textarea class="promt-textarea" id="promt" name="promt">{{ promt }}</textarea>
-            </div>
-            <div>
-				      <p>Строгость проверки промта:</p>
-						  <label><input type="radio" name="valid" id="light" value="light"> По лайту</label>
-						  <label><input type="radio" name="valid" id="hard" value="hard"> Попридирчивее</label>
-            </div>
-				</div>
-                <div class="chat_input">
-				   <p> </p>
-                   <button type="submit" class="button-right" id="submit-btn">Создать</button>
-                </div>
-			  </form>
-        </div>
-        <div class="rightSide">
-            <div class="header">
-			   <p>Текущий чат с ассистентом</p>
-               <button id="clear-but" class="button-right">Очистить чат</button>
-            </div>
-            <!-- CHAT-BOX -->
-            <div id="chat-box" class="chatbox">
-                {% for entry in chat_history %}
-                  <div class="message user"><p>Вы:<br/> {{ entry.user_t }}</p></div>
-                  <div class="message llm"><p>Ассистент:<br/> {{ entry.llm_t }}</p></div>
-                {% endfor %}
-            </div>
-            <!-- CHAT INPUT -->
-            <form id="chat-form" autocomplete="off">
-              <div class="chat_input">
-
-                 <input type="text" id="user-input" placeholder="Введите вопрос  " required>
-				 <button class="button-right" type="submit">Отправить</button>
-
-              </div>
-            </form>
-        </div>
+        <form id="newas" autocomplete="off">
+          <div><img src="{{ img }}" alt="Фото ассистента" class="llm-photo"></div>
+          <div>
+             <p>Данные ассистента:</p>
+             <label><input type="radio" id="men" name="gender" value="Мужчина"> Мужчина</label>
+             <label><input type="radio" id="woman" name="gender" value="Женщина"> Женщина</label>
+          </div>
+          <div class="agecontainer">
+			       <p>Возраст:</p>
+				     <input type="range" min="14" max="88" value="{{ age }}" class="slider" id="ageRange" name="age">
+				     <span id="ageDemo"></span>
+				  </div>
+          <div class="tcontainer">
+	           <p>Креативность:</p>
+	           <input type="range" min="0" max="1" step="0.1" value="{{ tllm }}" class="slider" id="tRange" name="tllm">
+	           <span id="tDemo"></span>
+	        </div>
+					<div><p>Промт текущего ассистента</p></div>
+				  <div class="promt-group">
+						 <textarea class="promt-textarea" id="promt" name="promt">{{ promt }}</textarea>
+          </div>
+          <div>
+				    <p>Строгость проверки промта:</p>
+					  <label><input type="radio" name="valid" id="light" value="light"> По лайту</label>
+					  <label><input type="radio" name="valid" id="hard" value="hard"> Попридирчивее</label>
+          </div>
+			</div>
+      <div class="chat_input">
+          <button id="share_but" type="button" class="button-right" style="margin-left: 0px;" title="Отправьте ссылку &#013;на этого ассистента.">Поделиться</button>
+          <button type="submit" class="button-right" id="submit-btn" title="Для создания нового ассистента &#013;установите настройки и введите новый промпт.">Создать</button>
+      </div>
+			</form>
     </div>
+    <div class="rightSide" id="right_block">
+       <div class="header">
+         <button id="tabr" class="button_tab" title="Переключиться на настройки &#013;настройки ассистента." style="margin: 0px 22px 0px 0px;">&lt; Ассистент</button>
+	       <p>Чат с текущим ассистентом</p>
+         <button id="clear-but" class="button-right" title="Очищает историю сообщений, &#013;не меняя настройки ассистента.">Очистить чат</button>
+       </div>
+       <div id="chat-box" class="chatbox">
+           {% for entry in chat_history %}
+             <div class="message user"><p>Вы:<br/> {{ entry.user_t }}</p></div>
+             <div class="message llm"><p>Ассистент:<br/> {{ entry.llm_t }}</p></div>
+           {% endfor %}
+       </div>
+       <form id="chat-form" autocomplete="off">
+         <div class="chat_input">
+           <input type="text" id="user-input" placeholder="Введите вопрос  " required>
+       		 <button class="button-right" type="submit" title="Отправить запрос ассистенту">Отправить</button>
+         </div>
+       </form>
+    </div>
+  </div>
    <script src="{{ url_for('static', filename='script.js') }}"></script>
-   <script>
+   <script type="text/javascript">
+     let side = loadSide();
+
+     function loadSide() {
+         try {
+             const savedSide = sessionStorage.getItem('appSide');
+             if (savedSide !== null) {
+                 return savedSide;
+             }
+         } catch (error) {
+             console.error('Ошибка загрузки из sessionStorage:', error);
+         }
+         return 2;
+     }
+
+     function handleResize() {
+      const left_block = document.getElementById('left_block');
+      const right_but = document.getElementById('tabr');
+      const right_block = document.getElementById('right_block');
+      const left_but = document.getElementById('tabl');
+      const width = window.innerWidth;
+      if (width < 850) {
+        if(side === 2) {
+          left_block.style.display = 'none';
+          right_but.style.display = 'block';
+          right_block.style.display = 'block';
+          left_but.style.display = 'none';
+        } else {
+          right_block.style.display = 'none';
+          left_but.style.display = 'block';
+          left_block.style.display = 'block';
+          right_but.style.display = 'none';
+        }
+      } else {
+        left_block.style.display = 'block';
+        right_block.style.display = 'block';
+        left_but.style.display = 'none';
+        right_but.style.display = 'none';
+      }
+     }
+
+     function setSide(newSide) {
+       side = newSide;
+       sessionStorage.setItem('appSide', newSide);
+       console.log('Сохранили side:', newSide);
+       handleResize();
+     }
+
+     document.getElementById('tabl').addEventListener('click', function() {
+       setSide(2);
+     });
+
+     document.getElementById('tabr').addEventListener('click', function() {
+       setSide(1);
+     });
+
      var men = document.getElementById("men");
      if (men.value === '{{ gender }}') men.checked = true;
      var woman = document.getElementById("woman");
@@ -99,6 +150,32 @@
      tllm_slider.oninput = function() {
      tllm_output.innerHTML = this.value;
      }
+
+    const share_but = document.getElementById('share_but');
+
+    share_but.addEventListener('click', async () => {
+      const shareData = {
+        title: 'ИИ ассистент',
+        text: 'Попробуй початиться с ним',
+        url: 'https://monteigel.fun/?ln={{ id }}'
+        // url: 'http://127.0.0.1:5000/?ln={{ id }}'
+      };
+
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.log('Поделиться не удалось:', error);
+      }
+    });
+
+    window.addEventListener('load', handleResize);
+    window.addEventListener('resize', handleResize);
+    document.addEventListener('DOMContentLoaded', function() {
+       if (window.location.search) {
+           const cleanUrl = window.location.origin + window.location.pathname;
+           window.history.replaceState({}, document.title, cleanUrl);
+       }
+    });
    </script>
 </body>
 </html>

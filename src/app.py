@@ -12,14 +12,30 @@ app.secret_key = 'your_secret_service_here'
 @app.route("/")
 def home():
     # session.clear()
+    assis = request.args.get('ln')
+    assis_id = 0
+    if assis:
+        try:
+            assis_id = int(assis)
+        except ValueError:
+            pass
     session.permanent = True
     if 'user_id' not in session:
         session['user_id'] = f"user_{uuid.uuid4().hex[:8]}"
     AsSetting.add_user(session['user_id'])
+    if assis_id:
+        as_str = AsSetting.templ(int(assis_id), mode=1)
+        if as_str:
+            AsHistory.clean(session['user_id'])
+            AsSetting.add_form(session['user_id'], as_str)
     session['cr_status'] = False
     chat_history = AsHistory.query.filter_by(user_id=session['user_id']).order_by(AsHistory.timestamp.asc()).all()
     templ = AsSetting.templ(session['user_id'])
+    # all_entries = AsSetting.query.all()
+    # for entry in all_entries:
+    #     print(entry.__dict__)
     return render_template('index.html', chat_history=chat_history, **templ)
+
 
 
 @app.route("/promt", methods=['GET', 'POST'])
